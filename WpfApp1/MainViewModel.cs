@@ -15,10 +15,10 @@ namespace WpfApp1
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private List<Node> root;
+        private Node root;
         private Scaner scaner;
 
-        public List<Node> MyItemsSource
+        public Node MyItemsSource
         {
             get { return root; }
             set { root = value; OnPropertyChanged(); }
@@ -71,7 +71,9 @@ namespace WpfApp1
                 return polishconvertCommand ??
                 (polishconvertCommand = new RelayCommand(obj =>
                 {
-                    try {
+                    TreeConverter.ConvertGrammarTreeToOperationTree(ref root);
+                    OnPropertyChanged(nameof(MyItemsSource));
+                    /*try {
                         StartCommand.Execute(new object());
 
                         if (root[0] != null)
@@ -148,7 +150,7 @@ namespace WpfApp1
                     catch (Exception ex)
                     {
 
-                    }
+                    }*/
                 }));
             }
         }
@@ -161,8 +163,7 @@ namespace WpfApp1
                 return startScanner ??
                 (startScanner = new RelayCommand(obj =>
                 {
-                    root = new List<Node>();
-                    root.Add(new Node());
+                    root = new Node();
                     OnPropertyChanged("MyItemsSource");
 
                     State = "";
@@ -220,14 +221,13 @@ namespace WpfApp1
                       StartScanner.Execute(new object());
                       if (ScannerText!=null && !ScannerText.Equals(string.Empty))
                       {
-                          root = new List<Node>();
-                          root.Add(new Node());
+                          root = new Node();
                           State = "";
                           MyParser parser = new MyParser("Cshort4.cgt", this);
                           var a = parser.Parse(Code);
 
                           if (a != null)
-                              ConvertToTree(a, root[0]);
+                              ConvertToTree(a, root);
 
                           OnPropertyChanged("MyItemsSource");
                       }
@@ -237,8 +237,7 @@ namespace WpfApp1
 
         public MainViewModel()
         {
-            root = new List<Node>();
-            root.Add(new Node());
+            root = new Node();
 
         //    String test = @"START {
         //    int a = 0;
@@ -268,8 +267,8 @@ namespace WpfApp1
                 for (int i = 0; i < (token as NonterminalToken).Tokens.Length; i++)
                 {
                     Node temp = currentNode1;
-                    currentNode1.childs.Add(new Node());
-                    currentNode1 = currentNode1.childs.Last();
+                    currentNode1.Children.Add(new Node());
+                    currentNode1 = currentNode1.Children.Last();
                     ConvertToTree((token as NonterminalToken).Tokens[i], currentNode1);
                     currentNode1 = temp;
                 }
@@ -279,9 +278,9 @@ namespace WpfApp1
         private void postOrder(List<Node> node)
         {
             if (node[0] == null) return;
-            for(int i = 0; i < node[0].childs.Count; i++)
+            for(int i = 0; i < node[0].Children.Count; i++)
             {
-                postOrder(node[0].childs[i]);
+                postOrder(node[0].Children[i]);
             }
             PolishText += node[0].Data + " ";
         }
@@ -289,22 +288,22 @@ namespace WpfApp1
         private void postOrder(Node node)
         {
             if (node == null) return;
-            for (int i = 0; i < node.childs.Count; i++)
+            for (int i = 0; i < node.Children.Count; i++)
             {
-                postOrder(node.childs[i]);
+                postOrder(node.Children[i]);
             }
-            if(node.childs.Count == 0)
+            if(node.Children.Count == 0)
             PolishText += node.Data + " ";
         }
 
         private void preOrder(Node node)
         {
             if (node == null) return;
-            if (node.childs.Count == 0)
+            if (node.Children.Count == 0)
                 PolishText += node.Data + " ";
-            for (int i = 0; i < node.childs.Count; i++)
+            for (int i = 0; i < node.Children.Count; i++)
             {
-                preOrder(node.childs[i]);
+                preOrder(node.Children[i]);
             }
             
                 

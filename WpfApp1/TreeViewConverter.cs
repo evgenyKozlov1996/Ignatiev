@@ -31,9 +31,9 @@ namespace WpfApp1
             foreach (var node in list)
             {
                 var newTV = new TreeViewItem() { Header = node.Data };
-                if (node.childs.Count > 0)
+                if (node.Children.Count > 0)
                 {
-                    CreateTree(node.childs, newTV.Items);
+                    CreateTree(node.Children, newTV.Items);
                     ItemsSource.Add(newTV);
                 }
                 else
