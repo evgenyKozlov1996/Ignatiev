@@ -72,7 +72,8 @@ namespace WpfApp1
 			Node childNode = node.Children[0];
 
 			// связать родителя текущего узла с единственным потомком текущего узла
-			currentNodeParent.Children.Add(childNode);
+			int index = currentNodeParent.Children.IndexOf(node); // индекс узла в списке узлов его родителя. Важен, потому что надо "подтягивать" узел на то же место
+			currentNodeParent.Children[index] = childNode;
 
 			// определить родителем единственного потомка текущего узла родителя текущего узла
 			childNode.Parent = currentNodeParent;			
