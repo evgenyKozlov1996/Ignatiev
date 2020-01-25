@@ -33,18 +33,19 @@ namespace WpfApp1
             if (currentNode.HasTerminalChildWithSemanticlessTerminal(out var semanticlessNode))
             {
                 currentNode.Children.Remove(semanticlessNode);
-                goto step1;
+                goto step3;
             }
             else goto step5;
 
-            step5:
-            if (currentNode.HasOperationChild(out var operationChildNode))
-            {
-                // todo Здесь может быть проблема, потому что безусловно считаем, что если тут операция, то все остальные символы - операнды
-                currentNode.Data = operationChildNode.Data;
-                currentNode.Children.Remove(operationChildNode);
-                goto step6;
-            }
+			step5:
+			if (currentNode.HasOperationChild(out var operationChildNode))
+			{
+				// todo Здесь может быть проблема, потому что безусловно считаем, что если тут операция, то все остальные символы - операнды
+				currentNode.Data = operationChildNode.Data;
+				currentNode.Children.Remove(operationChildNode);
+				goto step1;
+			}
+			else goto step6;
 
         step6:
             if (currentNode.HasNonTerminals())
@@ -66,11 +67,21 @@ namespace WpfApp1
                 throw new Exception("Node contains more than one children. Operation is inconsistent!");
             }
 
-            foreach (Node node1 in node.Children)
-            {
-                node1.Parent = node;
-            }
-            node.Children = node.Children[0].Children;
+
+			Node currentNodeParent = node.Parent;
+			Node childNode = node.Children[0];
+
+			// связать родителя текущего узла с единственным потомком текущего узла
+			currentNodeParent.Children.Add(childNode);
+
+			// определить родителем единственного потомка текущего узла родителя текущего узла
+			childNode.Parent = currentNodeParent;			
+
+			// удалить информацию о текущем узле
+			currentNodeParent.Children.Remove(node);
+
+			// сделать текущим родительский узел
+			currentNode = currentNodeParent;
         }
     }
 }

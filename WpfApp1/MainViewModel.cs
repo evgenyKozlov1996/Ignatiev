@@ -267,7 +267,11 @@ namespace WpfApp1
                 for (int i = 0; i < (token as NonterminalToken).Tokens.Length; i++)
                 {
                     Node temp = currentNode1;
-                    currentNode1.Children.Add(new Node());
+					Node childNode = new Node()
+					{
+						Parent = currentNode1
+					};
+                    currentNode1.Children.Add(childNode);
                     currentNode1 = currentNode1.Children.Last();
                     ConvertToTree((token as NonterminalToken).Tokens[i], currentNode1);
                     currentNode1 = temp;
