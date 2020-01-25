@@ -13,6 +13,7 @@ namespace Scanner
             return value == ' ';
         }
 
+
         /// <summary>
         /// Determintes whether a specified char value is digit
         /// </summary>

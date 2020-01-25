@@ -26,6 +26,8 @@ namespace Scanner
         private int currentPosition = 0;
         private int currentTokenToSend = 0;
 
+		private Token LastToken => ResultTokens[ResultTokens.Count - 1];
+
         private char currentChar
         {
             get
@@ -40,6 +42,8 @@ namespace Scanner
                 }
             }
         }
+
+		private char previousChar => TextToScan[currentPosition - 1];
 
         public Token NextToken
         {
@@ -71,12 +75,18 @@ namespace Scanner
                     if (!Dictionaries.UnresolvedSymbols.Contains(currentChar.ToString()))
                     {
                         SkipWhitespaces();
-                        SkipComments();
+                        //SkipComments();
 
-                        if (currentChar == '-' || currentChar.IsDigit()) // done
+                        if (currentChar == '-') // done
                         {
-                            ScanForNumericConstant();
-                        }
+							if (LastToken.IsAriphmeticOperationToken())
+								ScanForNumericConstant();
+							else ScanForMeaningfulDelimeters();
+						}
+						else if (currentChar.IsDigit())
+						{
+							ScanForNumericConstant();
+						}
                         else if (char.IsLetter(currentChar)) // done
                         {
                             ScanForKeywordsAndIdentifiers();

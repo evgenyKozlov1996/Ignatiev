@@ -30,5 +30,11 @@ namespace Scanner
             this.TokenType = type;
             this.Value = value;
         }
-    }
+
+		public bool IsAriphmeticOperationToken()
+		{
+			string[] ops = new string[] { "+", "-", "*", "/", "%" };
+			return ops.Contains(this.Value);
+		}
+	}
 }
