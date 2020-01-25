@@ -24,8 +24,8 @@
         <TextBox x:Name="Code" Grid.Row="0" Grid.Column="0" Text="{Binding Code, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"/>
         <TextBox x:Name="ScannerTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding ScannerText, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"/>
         <Button x:Name="BtnScanner" Grid.Row="1" Grid.Column="1" Command="{Binding StartScanner}" Content="Разобрать на лексемы" />
-        <!--<TreeView Grid.Row="0" Grid.Column="2" ItemsSource="{Binding MyItemsSource, Converter={StaticResource TreeViewConverter}}">
-        </TreeView>-->
+        <TreeView Grid.Row="0" Grid.Column="2" ItemsSource="{Binding MyItemsSource, Converter={StaticResource TreeViewConverter}}">
+        </TreeView>
         <Button x:Name="BtnStart" Grid.Row="1" Grid.Column="2" Command="{Binding StartCommand}" Content="Распарсить" />
         <Button x:Name="BtnOpenFile" Grid.Row="1" Grid.Column="0" Command="{Binding OpenFileCommand}" Content="Открыть файл" />
         <TextBox x:Name="StateTextBox" Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding State, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"/>

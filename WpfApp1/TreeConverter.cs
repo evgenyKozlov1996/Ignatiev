@@ -10,7 +10,7 @@ namespace WpfApp1
     {
         static Node currentNode;
 
-        public static void ConvertGrammarTreeToOperationTree(ref Node root)
+        public static void ConvertGrammarTreeToOperationTree(Node root)
         {
             currentNode = root;
 

@@ -15,10 +15,10 @@ namespace WpfApp1
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private Node root;
+        private List<Node> root;
         private Scaner scaner;
 
-        public Node MyItemsSource
+        public List<Node> MyItemsSource
         {
             get { return root; }
             set { root = value; OnPropertyChanged(); }
@@ -71,7 +71,7 @@ namespace WpfApp1
                 return polishconvertCommand ??
                 (polishconvertCommand = new RelayCommand(obj =>
                 {
-                    TreeConverter.ConvertGrammarTreeToOperationTree(ref root);
+                    TreeConverter.ConvertGrammarTreeToOperationTree(root[0]);
                     OnPropertyChanged(nameof(MyItemsSource));
                     /*try {
                         StartCommand.Execute(new object());
@@ -163,7 +163,8 @@ namespace WpfApp1
                 return startScanner ??
                 (startScanner = new RelayCommand(obj =>
                 {
-                    root = new Node();
+                    root = new List<Node>();
+                    root.Add(new Node());
                     OnPropertyChanged("MyItemsSource");
 
                     State = "";
@@ -221,13 +222,14 @@ namespace WpfApp1
                       StartScanner.Execute(new object());
                       if (ScannerText!=null && !ScannerText.Equals(string.Empty))
                       {
-                          root = new Node();
+                          root = new List<Node>();
+                          root.Add(new Node());
                           State = "";
                           MyParser parser = new MyParser("Cshort4.cgt", this);
                           var a = parser.Parse(Code);
 
                           if (a != null)
-                              ConvertToTree(a, root);
+                              ConvertToTree(a, root[0]);
 
                           OnPropertyChanged("MyItemsSource");
                       }
@@ -237,7 +239,8 @@ namespace WpfApp1
 
         public MainViewModel()
         {
-            root = new Node();
+            root = new List<Node>();
+            root.Add(new Node());
 
         //    String test = @"START {
         //    int a = 0;
