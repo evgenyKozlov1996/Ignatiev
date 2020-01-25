@@ -72,15 +72,34 @@ namespace WpfApp1
             return Children.Count == 1;
         }
 
-        public bool HasNonTerminals()
+        public bool HasNonTerminals(Node root, bool hasNonTerminals)
         {
-            foreach (Node node in Children)
+            /*foreach (Node node in Children)
             {
                 if (node.IsNonTerminal())
                 {
                     return true;
                 }
             }
+            return false;*/
+            if (root.IsNonTerminal())
+            {
+                return true;
+            }
+
+            if (root.Children != null && root.Children.Count > 0 && !hasNonTerminals)
+            {
+                for (int i = 0; i < root.Children.Count; i++)
+                {
+                    hasNonTerminals = HasNonTerminals(root.Children[i], hasNonTerminals);
+                    if (hasNonTerminals)
+                    {
+                        return true;
+                    }
+                }
+
+            }
+
             return false;
         }
 

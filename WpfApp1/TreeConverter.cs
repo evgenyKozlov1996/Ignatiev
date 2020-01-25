@@ -1,34 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WpfApp1
 {
     public static class TreeConverter
     {
-		static Node rootNode;
-		static Node currentNode;
+        static Node rootNode;
+        static Node currentNode;
 
         public static Node ConvertGrammarTreeToOperationTree(Node root)
         {
-			rootNode = root;
+            rootNode = root;
             currentNode = root;
 
         step1:
-            if (!currentNode.HasNonTerminals())
-			{
-				Node newRoot = new Node();
-				newRoot.Data = rootNode.Data;
-				newRoot.Children = rootNode.Children;
-				return newRoot;				
-			}                
+            if (!rootNode.HasNonTerminals(rootNode, false))
+            {
+                Node newRoot = new Node();
+                newRoot.Data = rootNode.Data;
+                newRoot.Children = rootNode.Children;
+                return newRoot;
+            }
 
-			step2:
-			GetLeftmostNonTerminal();
+        step2:
+            GetLeftmostNonTerminal();
 
-		step3:
+        step3:
             if (currentNode.HasOnlyOneChild())
             {
                 RetargetNode(currentNode);
@@ -44,28 +40,28 @@ namespace WpfApp1
             }
             else goto step5;
 
-			step5:
-			if (currentNode.HasOperationChild(out var operationChildNode))
-			{
-				// todo Здесь может быть проблема, потому что безусловно считаем, что если тут операция, то все остальные символы - операнды
-				currentNode.Data = operationChildNode.Data;
-				currentNode.Children.Remove(operationChildNode);
-				goto step1;
-			}
-			else goto step6;
+            step5:
+            if (currentNode.HasOperationChild(out var operationChildNode))
+            {
+                // todo Здесь может быть проблема, потому что безусловно считаем, что если тут операция, то все остальные символы - операнды
+                currentNode.Data = operationChildNode.Data;
+                currentNode.Children.Remove(operationChildNode);
+                goto step1;
+            }
+            else goto step6;
 
-			step6:
-			if (currentNode.HasNonTerminals())
-			{
-				currentNode = currentNode.GetLeftmostNonTerminalChild();
-				goto step3;
-			}
-			else
-			{
-				currentNode = rootNode;
-				goto step1;
-			}
-	
+            step6:
+            if (currentNode.HasNonTerminals(currentNode, false))
+            {
+                currentNode = currentNode.GetLeftmostNonTerminalChild();
+                goto step3;
+            }
+            else
+            {
+                currentNode = rootNode;
+                goto step1;
+            }
+
         }
 
         /// <summary>
@@ -80,45 +76,64 @@ namespace WpfApp1
             }
 
 
-			Node currentNodeParent = node.Parent;
-			Node childNode = node.Children[0];
+            Node currentNodeParent = node.Parent;
+            Node childNode = node.Children[0];
 
-			// если это корневая вершина (то есть нет родителя)
-			if (currentNodeParent == null)
-			{
-				// просто спускаемся на уровень ниже
-				rootNode = childNode;
-				rootNode.Children = childNode.Children;
-				rootNode.Parent = null;
-				currentNode = rootNode;
-			}
-			else
-			{
-				// связать родителя текущего узла с единственным потомком текущего узла
-				int index = currentNodeParent.Children.IndexOf(node); // индекс узла в списке узлов его родителя. Важен, потому что надо "подтягивать" узел на то же место
-				currentNodeParent.Children[index] = childNode;
+            // если это корневая вершина (то есть нет родителя)
+            if (currentNodeParent == null)
+            {
+                // просто спускаемся на уровень ниже
+                rootNode = childNode;
+                rootNode.Children = childNode.Children;
+                rootNode.Parent = null;
+                currentNode = rootNode;
+            }
+            else
+            {
+                // связать родителя текущего узла с единственным потомком текущего узла
+                int index = currentNodeParent.Children.IndexOf(node); // индекс узла в списке узлов его родителя. Важен, потому что надо "подтягивать" узел на то же место
+                currentNodeParent.Children[index] = childNode;
 
-				// определить родителем единственного потомка текущего узла родителя текущего узла
-				childNode.Parent = currentNodeParent;
+                // определить родителем единственного потомка текущего узла родителя текущего узла
+                childNode.Parent = currentNodeParent;
 
-				// удалить информацию о текущем узле
-				currentNodeParent.Children.Remove(node);
+                // удалить информацию о текущем узле
+                currentNodeParent.Children.Remove(node);
 
-				// сделать текущим родительский узел
-				currentNode = currentNodeParent;
-			}
-			
+                // сделать текущим родительский узел
+                currentNode = currentNodeParent;
+            }
+
         }
-		private static bool TreeHasNonTerminals()
-		{
 
-		}
+        /*private static bool TreeHasNonTerminals(Node root, bool hasNonTerminals)
+        {
+            if (root.IsNonTerminal())
+            {
+                return true;
+            }
 
-		private static void GetLeftmostNonTerminal()
-		{
-			if (currentNode.IsNonTerminal())
-				return;
-			else currentNode = currentNode.GetLeftmostNonTerminalChild();
-		}
+            if (root.Children != null && root.Children.Count > 0 && !hasNonTerminals)
+            {
+                for (int i = 0; i < root.Children.Count; i++)
+                {
+                    hasNonTerminals = TreeHasNonTerminals(root.Children[i], hasNonTerminals);
+                    if (hasNonTerminals)
+                    {
+                        return true;
+                    }
+                }
+
+            }
+
+            return false;
+        }*/
+
+            private static void GetLeftmostNonTerminal()
+            {
+                if (currentNode.IsNonTerminal())
+                    return;
+                else currentNode = currentNode.GetLeftmostNonTerminalChild();
+            }
+        }
     }
-}
