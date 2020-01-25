@@ -72,35 +72,27 @@ namespace WpfApp1
             return Children.Count == 1;
         }
 
-        public bool HasNonTerminals(Node root, bool hasNonTerminals)
+		public Node GetLeftmostNonTerminal(Node root, bool checkCurrent)
         {
-            /*foreach (Node node in Children)
+            if (checkCurrent == true && root.IsNonTerminal())
             {
-                if (node.IsNonTerminal())
-                {
-                    return true;
-                }
-            }
-            return false;*/
-            if (root.IsNonTerminal())
-            {
-                return true;
+                return root;
             }
 
-            if (root.Children != null && root.Children.Count > 0 && !hasNonTerminals)
+            if (root.Children != null && root.Children.Count > 0)
             {
                 for (int i = 0; i < root.Children.Count; i++)
                 {
-                    hasNonTerminals = HasNonTerminals(root.Children[i], hasNonTerminals);
-                    if (hasNonTerminals)
+                    Node nonTerminalChild = GetLeftmostNonTerminal(root.Children[i], true);
+                    if (nonTerminalChild != null)
                     {
-                        return true;
+                        return nonTerminalChild;
                     }
                 }
 
             }
 
-            return false;
+            return null;
         }
 
         /// <summary>
@@ -148,6 +140,7 @@ namespace WpfApp1
             return false;
         }
 
+		/*
         /// <summary>
         /// Возвращает самый левый нетерминальный дочерний узел. или <see langword="null"/>.
         /// </summary>
@@ -164,5 +157,6 @@ namespace WpfApp1
 
             return null;
         }
+		*/
     }
 }
