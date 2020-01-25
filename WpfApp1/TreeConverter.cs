@@ -18,10 +18,10 @@ namespace WpfApp1
             if (!currentNode.HasNonTerminals())
                 return;
 
-            step2:
-            currentNode = currentNode.GetLeftmostNonTerminalChild();
+			step2:
+			GetLeftmostNonTerminal();
 
-        step3:
+		step3:
             if (currentNode.HasOnlyOneChild())
             {
                 RetargetNode(currentNode);
@@ -71,18 +71,35 @@ namespace WpfApp1
 			Node currentNodeParent = node.Parent;
 			Node childNode = node.Children[0];
 
-			// связать родителя текущего узла с единственным потомком текущего узла
-			int index = currentNodeParent.Children.IndexOf(node); // индекс узла в списке узлов его родителя. Важен, потому что надо "подтягивать" узел на то же место
-			currentNodeParent.Children[index] = childNode;
+			// если это корневая вершина (то есть нет родителя)
+			if (currentNodeParent == null)
+			{
+				// просто спускаемся на уровень ниже
+				currentNode = childNode;
+			}
+			else
+			{
+				// связать родителя текущего узла с единственным потомком текущего узла
+				int index = currentNodeParent.Children.IndexOf(node); // индекс узла в списке узлов его родителя. Важен, потому что надо "подтягивать" узел на то же место
+				currentNodeParent.Children[index] = childNode;
 
-			// определить родителем единственного потомка текущего узла родителя текущего узла
-			childNode.Parent = currentNodeParent;			
+				// определить родителем единственного потомка текущего узла родителя текущего узла
+				childNode.Parent = currentNodeParent;
 
-			// удалить информацию о текущем узле
-			currentNodeParent.Children.Remove(node);
+				// удалить информацию о текущем узле
+				currentNodeParent.Children.Remove(node);
 
-			// сделать текущим родительский узел
-			currentNode = currentNodeParent;
+				// сделать текущим родительский узел
+				currentNode = currentNodeParent;
+			}
+			
         }
+
+		private static void GetLeftmostNonTerminal()
+		{
+			if (currentNode.IsNonTerminal())
+				return;
+			else currentNode = currentNode.GetLeftmostNonTerminalChild();
+		}
     }
 }

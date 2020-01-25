@@ -45,14 +45,15 @@ namespace WpfApp1
             return ops.Contains(Data);
         }
 
-        /// <summary>
-        /// Определяет, содержит ли узел терминал, не несущий никакой семантической нагрузки
-        /// </summary>
-        /// <returns></returns>
-        public bool IsSemanticlessTerminal()
-        {
-            string[] terms = new string[] { "(", ")", "{", "}" };
-            return terms.Contains(Data);
+		/// <summary>
+		/// Определяет, содержит ли узел терминал, не несущий никакой семантической нагрузки
+		/// </summary>
+		/// <returns></returns>
+		public bool IsSemanticlessTerminal()
+		{
+			string[] identifiers = new string[] { "int", "string", "double", "bool" };
+            string[] terms = new string[] { "(", ")", "{", "}", ";", "start" };
+			return terms.Contains(Data) || identifiers.Contains(Data);
         }
 
         public bool HasOnlyOneChild()
