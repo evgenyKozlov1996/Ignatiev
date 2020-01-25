@@ -71,7 +71,7 @@ namespace WpfApp1
                 return polishconvertCommand ??
                 (polishconvertCommand = new RelayCommand(obj =>
                 {
-                    TreeConverter.ConvertGrammarTreeToOperationTree(root[0]);
+                    root[0] = TreeConverter.ConvertGrammarTreeToOperationTree(root[0]);
                     OnPropertyChanged(nameof(MyItemsSource));
                     /*try {
                         StartCommand.Execute(new object());

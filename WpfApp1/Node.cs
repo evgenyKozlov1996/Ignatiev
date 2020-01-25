@@ -5,7 +5,7 @@ using System.Linq;
 namespace WpfApp1
 {
     public class Node
-    {
+    {			
         public string Data { get; set; }
         public Node Parent { get; set; }
         public List<Node> Children { get; set; }
@@ -36,7 +36,18 @@ namespace WpfApp1
 
         public bool IsNonTerminal()
         {
-            return (Children != null && Children.Count > 0);
+			// todo так себе решение. 
+			bool hasChildren = Children != null && Children.Count > 0;
+
+			if (hasChildren)
+			{				
+				if (IsOperation())
+				{
+					return false;
+				}
+				else return true;
+			}
+			else return false;
         }
 
         public bool IsOperation()

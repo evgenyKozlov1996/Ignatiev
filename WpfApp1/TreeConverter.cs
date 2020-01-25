@@ -8,15 +8,22 @@ namespace WpfApp1
 {
     public static class TreeConverter
     {
-        static Node currentNode;
+		static Node rootNode;
+		static Node currentNode;
 
-        public static void ConvertGrammarTreeToOperationTree(Node root)
+        public static Node ConvertGrammarTreeToOperationTree(Node root)
         {
+			rootNode = root;
             currentNode = root;
 
         step1:
             if (!currentNode.HasNonTerminals())
-                return;
+			{
+				Node newRoot = new Node();
+				newRoot.Data = rootNode.Data;
+				newRoot.Children = rootNode.Children;
+				return newRoot;				
+			}                
 
 			step2:
 			GetLeftmostNonTerminal();
@@ -47,13 +54,18 @@ namespace WpfApp1
 			}
 			else goto step6;
 
-        step6:
-            if (currentNode.HasNonTerminals())
-            {
-                currentNode = currentNode.GetLeftmostNonTerminalChild();
-                goto step3;
-            }
-            else return;
+			step6:
+			if (currentNode.HasNonTerminals())
+			{
+				currentNode = currentNode.GetLeftmostNonTerminalChild();
+				goto step3;
+			}
+			else
+			{
+				currentNode = rootNode;
+				goto step1;
+			}
+	
         }
 
         /// <summary>
@@ -75,7 +87,10 @@ namespace WpfApp1
 			if (currentNodeParent == null)
 			{
 				// просто спускаемся на уровень ниже
-				currentNode = childNode;
+				rootNode = childNode;
+				rootNode.Children = childNode.Children;
+				rootNode.Parent = null;
+				currentNode = rootNode;
 			}
 			else
 			{
@@ -94,6 +109,10 @@ namespace WpfApp1
 			}
 			
         }
+		private static bool TreeHasNonTerminals()
+		{
+
+		}
 
 		private static void GetLeftmostNonTerminal()
 		{
