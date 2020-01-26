@@ -229,7 +229,11 @@ namespace WpfApp1
                           var a = parser.Parse(Code);
 
                           if (a != null)
-                              ConvertToTree(a, root[0]);
+						  {
+							  ConvertToTree(a, root[0]);
+							  root[0] = TreePreparer.PrepareTree(root[0]);
+						  }
+                              
 
                           OnPropertyChanged("MyItemsSource");
                       }

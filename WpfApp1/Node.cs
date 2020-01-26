@@ -10,11 +10,7 @@ namespace WpfApp1
         public Node Parent { get; set; }
         public List<Node> Children { get; set; }
 
-        public Node(string data)
-        {
-            this.Data = data;
-            Children = new List<Node>();
-        }
+		public int Label { get; set; }
 
         public Node(string data, Node parent)
         {
@@ -63,7 +59,7 @@ namespace WpfApp1
 		public bool IsSemanticlessTerminal()
 		{
 			string[] identifiers = new string[] { "int", "string", "double", "bool" };
-            string[] terms = new string[] { "(", ")", "{", "}", ";", "start" };
+            string[] terms = new string[] { "(", ")", "{", "}", ";", "start"};
 			return terms.Contains(Data) || identifiers.Contains(Data);
         }
 

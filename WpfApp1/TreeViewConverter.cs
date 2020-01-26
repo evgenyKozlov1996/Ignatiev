@@ -30,7 +30,7 @@ namespace WpfApp1
         {
             foreach (var node in list)
             {
-                var newTV = new TreeViewItem() { Header = node.Data };
+				var newTV = new TreeViewItem() { Header = node.Data};
                 if (node.Children.Count > 0)
                 {
                     CreateTree(node.Children, newTV.Items);
