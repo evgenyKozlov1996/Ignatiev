@@ -9,7 +9,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Scanner;
-using System.CodeDom.Compiler;
 
 namespace WpfApp1
 {
@@ -71,8 +70,22 @@ namespace WpfApp1
                 return polishconvertCommand ??
                 (polishconvertCommand = new RelayCommand(obj =>
                 {
+                    State = "";
+                    result = "";
                     root[0] = TreeConverter.ConvertGrammarTreeToOperationTree(root[0]);
                     OnPropertyChanged(nameof(MyItemsSource));
+
+                        // Script
+                        string script = Code;
+                        //script = script.Replace("consolelog", "console.log");
+                        script = "main(1);\n main(2);\n" + script;
+
+                    Jint.Engine eng = new Jint.Engine().SetValue("consolelog", new Action<object>(Log));//.SetValue("console.log", new Func<sting>());
+                    eng.Execute(script);
+
+                    State = result;
+
+                    Console.Write("");
                     /*try {
                         StartCommand.Execute(new object());
 
@@ -155,6 +168,16 @@ namespace WpfApp1
             }
         }
 
+        string result = "";
+        object obj = new object();
+
+        private void Log(object str)
+        {
+            lock (obj) {
+                result += str + "\n";
+            }
+        }
+
         public RelayCommand StartScanner
         {
             get
@@ -225,13 +248,13 @@ namespace WpfApp1
                           root = new List<Node>();
                           root.Add(new Node());
                           State = "";
-                          MyParser parser = new MyParser("Cshort8.cgt", this);
+                          MyParser parser = new MyParser("JavaScript.cgt", this);
                           var a = parser.Parse(Code);
 
                           if (a != null)
 						  {
 							  ConvertToTree(a, root[0]);
-							  root[0] = TreePreparer.PrepareTree(root[0]);
+							  //root[0] = TreePreparer.PrepareTree(root[0]);
 						  }
                               
 

@@ -62,8 +62,8 @@ namespace WpfApp1
 		/// <returns></returns>
 		public bool IsSemanticlessTerminal()
 		{
-			string[] identifiers = new string[] { "int", "string", "double", "bool" };
-            string[] terms = new string[] { "(", ")", "{", "}", ";", "start"};
+			string[] identifiers = new string[] { "var" };
+            string[] terms = new string[] { "(", ")", "{", "}", ";", "function main(input)"};
 			return terms.Contains(Data) || identifiers.Contains(Data);
         }
 
