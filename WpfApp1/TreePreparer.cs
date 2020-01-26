@@ -15,10 +15,16 @@ namespace WpfApp1
 
 		public static Node PrepareTree(Node root)
 		{
-			Node ifStatementNode = FindNodeWithIfStatement(root);
+			Node ifStatementNode = FindNode(root, "if");
 			if (ifStatementNode != null)
 			{
 				RebaseNodeWithIfStatement(ifStatementNode.Parent);
+			}
+
+			Node forNode = FindNode(root, "for");
+			if (forNode != null)
+			{
+				RebaseNodeWithForStatement(forNode.Parent);
 			}
 			
 
@@ -29,9 +35,9 @@ namespace WpfApp1
 			};
 		}
 
-		public static Node FindNodeWithIfStatement(Node root)
+		private static Node FindNode(Node root, string dataToSeek)
 		{
-			if (root.Data == "if")
+			if (root.Data.Equals(dataToSeek))
 			{
 				return root;
 			}
@@ -40,10 +46,10 @@ namespace WpfApp1
 			{
 				for (int i = 0; i < root.Children.Count; i++)
 				{
-					Node ifNode = FindNodeWithIfStatement(root.Children[i]);
-					if (ifNode != null)
+					Node node = FindNode(root.Children[i], dataToSeek);
+					if (node != null)
 					{
-						return ifNode;
+						return node;
 					}
 				}
 
@@ -52,7 +58,38 @@ namespace WpfApp1
 			return null;
 		}
 
-		public static void RebaseNodeWithIfStatement(Node rootForIfStatement)
+
+		private static void RebaseNodeWithForStatement(Node rootOfForStatement)
+		{
+			RemoveNodesWithSemicolons(rootOfForStatement);
+			RemoveNodesWithParanthesis(rootOfForStatement);
+
+			Node forNode = rootOfForStatement.Children.First(n => n.Data.Equals("for"));
+			rootOfForStatement.Children.Remove(forNode);
+
+			Node conditionNode = rootOfForStatement.Children.First(n => n.Data.Equals("For Condition Opt"));			
+			conditionNode.Data = "УПЛ";
+			conditionNode.Children.Add(new Node($"m{secondLabelIndex}", conditionNode));
+
+			// перетасовка итератора и тела цикла
+			Node iteratorOpt = rootOfForStatement.Children.First(n => n.Data.Equals("For Iterator Opt"));
+			Node statementOpt = rootOfForStatement.Children.First(n => n.Data.Equals("Statement"));
+
+			int indexOfIterator = rootOfForStatement.Children.IndexOf(iteratorOpt);
+			int indexOfStatement = rootOfForStatement.Children.IndexOf(statementOpt);
+
+			var buf = iteratorOpt;
+			rootOfForStatement.Children[indexOfIterator] = statementOpt;
+			rootOfForStatement.Children[indexOfStatement] = buf;
+
+			// добавляем БП в конец цикла
+			Node bpNode = new Node($"БП", rootOfForStatement);
+			bpNode.Children.Add(new Node($"m{firstLabelIndex}", bpNode));
+			rootOfForStatement.Children.Add(bpNode);
+			
+
+		}
+		private static void RebaseNodeWithIfStatement(Node rootForIfStatement)
 		{
 			RemoveNodesWithParanthesis(rootForIfStatement);
 
@@ -89,6 +126,15 @@ namespace WpfApp1
 
 			root.Children.Remove(paranStartNode);
 			root.Children.Remove(paranEndNode);
+		}
+
+		private static void RemoveNodesWithSemicolons (Node root)
+		{
+			var nodesWithSemicolon = root.Children.Where(i => i.Data.Equals(";")).ToList();
+			for (int i = 0; i < nodesWithSemicolon.Count; i++)
+			{
+				root.Children.Remove(nodesWithSemicolon[i]);
+			}
 		}
 	}
 }
