@@ -16,7 +16,11 @@ namespace WpfApp1
 		public static Node PrepareTree(Node root)
 		{
 			Node ifStatementNode = FindNodeWithIfStatement(root);
-			RebaseNodeWithIfStatement(ifStatementNode.Parent);
+			if (ifStatementNode != null)
+			{
+				RebaseNodeWithIfStatement(ifStatementNode.Parent);
+			}
+			
 
 			return new Node()
 			{
@@ -50,6 +54,8 @@ namespace WpfApp1
 
 		public static void RebaseNodeWithIfStatement(Node rootForIfStatement)
 		{
+			RemoveNodesWithParanthesis(rootForIfStatement);
+
 			rootForIfStatement.Data = "EMPTY";
 			rootForIfStatement.Label = secondLabelIndex;
 
@@ -57,6 +63,7 @@ namespace WpfApp1
 			Node expressionNode = rootForIfStatement.Children.First(n => n.Data.Equals("Expression"));
 
 			ifNode.Data = "УПЛ";
+			expressionNode.Parent = ifNode;
 			ifNode.Children.Add(expressionNode);
 			ifNode.Children.Add(new Node($"m{firstLabelIndex}", ifNode));
 			rootForIfStatement.Children.Remove(expressionNode);
@@ -73,6 +80,15 @@ namespace WpfApp1
 
 			firstLabelIndex += 2;
 			secondLabelIndex += 2;
+		}
+
+		private static void RemoveNodesWithParanthesis(Node root)
+		{
+			Node paranStartNode = root.Children.First(i => i.Data == "(");
+			Node paranEndNode = root.Children.First(i => i.Data == ")");
+
+			root.Children.Remove(paranStartNode);
+			root.Children.Remove(paranEndNode);
 		}
 	}
 }

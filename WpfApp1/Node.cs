@@ -32,6 +32,10 @@ namespace WpfApp1
 
         public bool IsNonTerminal()
         {
+			string[] terminals = new string[] { "EMPTY", "УПЛ", "БП" };
+			if (terminals.Contains(Data))
+				return false;
+
 			// todo так себе решение. 
 			bool hasChildren = Children != null && Children.Count > 0;
 
@@ -123,36 +127,20 @@ namespace WpfApp1
         /// <returns></returns>
         public bool HasOperationChild(out Node operationChildNode)
         {
+			bool result = false;
             operationChildNode = null;
             for (int i = 0; i < Children.Count; i++)
-            {
+            {				
                 if (Children[i].IsOperation())
                 {
                     operationChildNode = Children[i];
-                    return true;
+					result = true;
+					break;
                 }
             }
 
-            return false;
+            return result;
         }
 
-		/*
-        /// <summary>
-        /// Возвращает самый левый нетерминальный дочерний узел. или <see langword="null"/>.
-        /// </summary>
-        /// <returns></returns>
-        public Node GetLeftmostNonTerminalChild()
-        {
-            for (int i = 0; i < Children.Count; i++)
-            {
-                if (Children[i].IsNonTerminal())
-                {
-                    return Children[i];
-                }
-            }
-
-            return null;
-        }
-		*/
     }
 }

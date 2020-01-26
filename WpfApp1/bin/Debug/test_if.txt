@@ -3,7 +3,6 @@ start
  if ( i > 5 && h < 100)
           { 
             h = h + i * 2;
-	    h++;
           }
 	else
 	{

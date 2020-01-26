@@ -225,7 +225,7 @@ namespace WpfApp1
                           root = new List<Node>();
                           root.Add(new Node());
                           State = "";
-                          MyParser parser = new MyParser("Cshort4.cgt", this);
+                          MyParser parser = new MyParser("Cshort8.cgt", this);
                           var a = parser.Parse(Code);
 
                           if (a != null)

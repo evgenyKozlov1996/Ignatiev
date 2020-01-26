@@ -40,6 +40,7 @@ namespace WpfApp1
 			step5:
 			if (currentNode.HasOperationChild(out var operationChildNode))
 			{
+				
 				// todo Здесь может быть проблема, потому что безусловно считаем, что если тут операция, то все остальные символы - операнды
 				currentNode.Data = operationChildNode.Data;
 				currentNode.Children.Remove(operationChildNode);
