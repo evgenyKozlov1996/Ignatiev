@@ -64,6 +64,8 @@ namespace WpfApp1
 			RemoveNodesWithSemicolons(rootOfForStatement);
 			RemoveNodesWithParanthesis(rootOfForStatement);
 
+			rootOfForStatement.Data = "EMPTY";
+
 			Node forNode = rootOfForStatement.Children.First(n => n.Data.Equals("for"));
 			rootOfForStatement.Children.Remove(forNode);
 
@@ -86,7 +88,9 @@ namespace WpfApp1
 			Node bpNode = new Node($"БП", rootOfForStatement);
 			bpNode.Children.Add(new Node($"m{firstLabelIndex}", bpNode));
 			rootOfForStatement.Children.Add(bpNode);
-			
+
+			firstLabelIndex += 2;
+			secondLabelIndex += 2;
 
 		}
 		private static void RebaseNodeWithIfStatement(Node rootForIfStatement)

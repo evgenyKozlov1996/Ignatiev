@@ -52,7 +52,7 @@ namespace WpfApp1
 
         public bool IsOperation()
         {
-            string[] ops = new string[] { "==", "!=", "+", "-", "*", "/", "<", ">", "<=", ">=", "&&", "||", "=" };
+            string[] ops = new string[] { "==", "!=", "+", "-", "*", "/", "<", ">", "<=", ">=", "&&", "||", "=", "++", "--" };
             return ops.Contains(Data);
         }
 
