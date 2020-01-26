@@ -5,32 +5,45 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="900" Width="800">
     <Window.Resources>
         <local:TreeViewConverter x:Key="TreeViewConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
             <RowDefinition Height="60"/>
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="Code" Grid.Row="0" Grid.Column="0" Text="{Binding Code, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"/>
-        <TextBox x:Name="ScannerTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding ScannerText, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"/>
-        <Button x:Name="BtnScanner" Grid.Row="1" Grid.Column="1" Command="{Binding StartScanner}" Content="Разобрать на лексемы" />
-        <TreeView Grid.Row="0" Grid.Column="2" ItemsSource="{Binding MyItemsSource, Converter={StaticResource TreeViewConverter}}">
-        </TreeView>
-        <Button x:Name="BtnStart" Grid.Row="1" Grid.Column="2" Command="{Binding StartCommand}" Content="Распарсить" />
-        <Button x:Name="BtnOpenFile" Grid.Row="1" Grid.Column="0" Command="{Binding OpenFileCommand}" Content="Открыть файл" />
-        <TextBox x:Name="StateTextBox" Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding State, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"/>
-        <Button x:Name="BtnPolishConvert" Grid.Row="2" Grid.Column="0" Command="{Binding PolishConvertCommand}" Content="Рассчитать" />
-        <TextBox x:Name="PolishTextBox" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PolishText, Mode=TwoWay}"  VerticalScrollBarVisibility="Visible"/>
+        <DockPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch">
+            <Label Content="Код программы" DockPanel.Dock ="Top" HorizontalAlignment="Center"/>
+            <TextBox x:Name="Code" Grid.Row="0" Grid.Column="0" Text="{Binding Code, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True" VerticalAlignment="Stretch" Margin="5,0,5,5"/>
+        </DockPanel>
+        <DockPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch">
+            <Label DockPanel.Dock="Top" Content="Токены" HorizontalAlignment="Center"/>
+            <TextBox x:Name="ScannerTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding ScannerText, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True" VerticalAlignment="Stretch" Margin="5,0,5,5"/>
+        </DockPanel>
+        <StackPanel x:Name="Buttons" Grid.Row="0" Grid.Column="2" VerticalAlignment="Stretch" Margin="5,5,5,5">
+            <Button x:Name="BtnOpenFile" Command="{Binding OpenFileCommand}" Content="Открыть код" Margin="0,5,0,0"/>
+            <Button x:Name="BtnScanner" Grid.Column="1" Command="{Binding StartScanner}" Content="Провести лексический анализ" Margin="0,5,0,0" />
+            <Button x:Name="BtnStart" Command="{Binding StartCommand}" Content="Построить дерево грамм. разбора" Margin="0,5,0,0"/>
+            <Button x:Name="BtnPolishConvert" Command="{Binding PolishConvertCommand}" Content="Выполнить код" Margin="0,5,0,0"/>
+        </StackPanel>
         
+        <DockPanel Grid.Row="1" Grid.ColumnSpan="4" VerticalAlignment="Stretch">
+            <Label Content="Результаты вычислений:"></Label>
+            <TextBox x:Name="StateTextBox" Text="{Binding State, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True" Margin="5,5,5,5"/>
+        </DockPanel>
+        
+        <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Stretch">
+            <Label DockPanel.Dock="Top" Content="Дерево грамматического разбора" HorizontalAlignment="Center"></Label>
+            <TreeView  ItemsSource="{Binding MyItemsSource, Converter={StaticResource TreeViewConverter}}" Margin="5,0,5,5">
+            </TreeView>
+        </DockPanel>
     </Grid>
 </Window>

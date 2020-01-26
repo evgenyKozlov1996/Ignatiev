@@ -14,21 +14,16 @@ namespace Scanner
         /// <summary>
         /// The list of keywords that's supported in language
         /// </summary>
-        internal static readonly List<Token> LanguageKeywords = new List<Token>()
+        public static readonly List<string> LanguageKeywords = new List<string>()
         {
-            new Token("start", TokenType.START),
-            new Token("int", TokenType.INTEGER),
-            new Token("double", TokenType.DOUBLE),
-            new Token("string", TokenType.STRING),
-            new Token("boolean", TokenType.BOOLEAN),
-            new Token("if", TokenType.IF),
-            new Token("else", TokenType.ELSE),
-            new Token("for", TokenType.FOR),
-            new Token("true", TokenType.TRUE),
-            new Token("false", TokenType.FALSE),
-            new Token("output", TokenType.OUTPUT)
+            "consolelog",
+            "var",
+            "const",
+            "if",
+            "else",
+            "for",
+            "function"
         };
-
 
         public static readonly List<string> UnresolvedSymbols = new List<string>()
         {
@@ -41,8 +36,7 @@ namespace Scanner
             "^",
             ":",
             "?",
-            "",
-            " "
+            ""
         };
     }
 }

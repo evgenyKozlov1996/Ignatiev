@@ -11,35 +11,20 @@ namespace Scanner
     /// </summary>
     public enum TokenType
     {
-
         // language keywords part
         VARIABLE,
-        LANGUAGE_KEYWORD,
-        START,
-        INTEGER,
-        DOUBLE,
-        STRING,
-        BOOLEAN,
-        IF,
-        ELSE,
-        FOR,
-        TRUE,
-        FALSE,
-        OUTPUT,
+        KEYWORD_LANG,
 
         // consts part
         BOOLEAN_TRUE,
         BOOLEAN_FALSE,
-        INT_CONST,
-        DOUBLE_CONST,
-        STRING_CONST,
+        VAR_CONST,
 
         // math operations
         PLUS,
-        PLUS_ONE,
         MINUS,
-        MINUS_ONE,
         DIV,
+        MOD,
         MULTIPLY,
         SEMICOLON,
 
@@ -59,6 +44,10 @@ namespace Scanner
         CODEBLOCK_START,
         CODEBLOCK_END,
         PARANTHESIS_START,
-        PARANTHESIS_END
+        PARANTHESIS_END,
+
+        COMMENT,
+
+        MARK
     }
 }

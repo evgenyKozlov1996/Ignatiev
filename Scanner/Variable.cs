@@ -1,14 +1,20 @@
-﻿namespace Scanner
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Scanner
 {
     public class Variable
     {
-        public readonly string Name;
-        public readonly string Value;
+        public string name;
+        public bool isConst;
 
-        public Variable(string name)
+        public Variable(string name, bool isConst)
         {
-            this.Name = name;
-            this.Value = null;
+            this.name = name;
+            this.isConst = isConst;
         }
     }
 }

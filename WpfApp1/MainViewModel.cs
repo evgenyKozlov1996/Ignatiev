@@ -23,14 +23,6 @@ namespace WpfApp1
             set { root = value; OnPropertyChanged(); }
         }
 
-        private string polishtext;
-
-        public string PolishText
-        {
-            get { return polishtext; }
-            set { polishtext = value; OnPropertyChanged(); }
-        }
-
         private string code;
         public string Code
         {
@@ -70,100 +62,28 @@ namespace WpfApp1
                 return polishconvertCommand ??
                 (polishconvertCommand = new RelayCommand(obj =>
                 {
-                    State = "";
-                    result = "";
-                    root[0] = TreeConverter.ConvertGrammarTreeToOperationTree(root[0]);
-                    OnPropertyChanged(nameof(MyItemsSource));
+                    try
+                    {
+                        StartCommand.Execute(new object());
+
+                        State = "";
+                        result = "";
+                        //root[0] = TreeConverter.ConvertGrammarTreeToOperationTree(root[0]);
+                        //OnPropertyChanged(nameof(MyItemsSource));
 
                         // Script
                         string script = Code;
-                        //script = script.Replace("consolelog", "console.log");
-                        script = "main(1);\n main(2);\n" + script;
+                        script = "main();" + script;
 
-                    Jint.Engine eng = new Jint.Engine().SetValue("consolelog", new Action<object>(Log));//.SetValue("console.log", new Func<sting>());
-                    eng.Execute(script);
+                        Jint.Engine eng = new Jint.Engine().SetValue("consolelog", new Action<object>(Log));
+                        eng.Execute(script);
 
-                    State = result;
-
-                    Console.Write("");
-                    /*try {
-                        StartCommand.Execute(new object());
-
-                        if (root[0] != null)
-                        {
-                            var compiler = CodeDomProvider.CreateProvider("CSharp");
-                            var parameters = new CompilerParameters
-                            {
-                                CompilerOptions = "/t:library",
-                                GenerateInMemory = true,
-                                IncludeDebugInformation = false
-                            };
-                            String templatestart = @"
-                    using System;
-                        namespace Test
-                        {
-                               public class TestClass
-                               {
-                                     public string TestMethod()
-                                     {
-                                        string result = string.Empty;
-                                    ";
-                            string text = Code.Substring(Code.IndexOf('{') + 1);
-                            text = text.Remove(text.LastIndexOf('}'));
-                            int outputIndex = text.IndexOf("output") + 6;
-                            while (outputIndex != 5)
-                            {
-                                int spaceCount = 0;
-                                int currIndex = outputIndex;
-                                while (text[currIndex].Equals(' '))
-                                {
-                                    spaceCount++;
-                                    currIndex++;
-                                }
-                                text = text.Remove(outputIndex, spaceCount);
-                                int index = outputIndex;
-                                while (!text[index].Equals(';'))
-                                {
-                                    if (text[index].Equals('(') || text[index].Equals(')') || text[index].Equals(' '))
-                                    {
-                                        text = text.Remove(index, 1);
-                                    }
-                                    else if (text[index].Equals(','))
-                                    {
-                                        text = text.Remove(index, 1);
-                                        text = text.Insert(index, " + \"\\n\" + ");
-                                        index += 9;
-                                    }
-                                    else
-                                    {
-                                        index++;
-                                    }
-                                }
-                                text = text.Remove(outputIndex-6, 6);
-                                text = text.Insert(outputIndex - 6, "result += ");
-
-                                outputIndex = text.IndexOf("output") + 6;
-                            }
-
-                            String templateend = @"return result;}             
-                                }
-                         }";
-
-                            string resultcode = templatestart + text + templateend;
-                            CompilerResults results = compiler.CompileAssemblyFromSource(parameters, resultcode);
-
-                            var instance = results.CompiledAssembly.CreateInstance("Test.TestClass");
-
-                            string resultMsg = results.CompiledAssembly.GetType("Test.TestClass").GetMethod("TestMethod").Invoke(instance, new string[] { }).ToString();
-
-                            State = resultMsg;
-                        }
-                        //preOrder(root[0]);
+                        State = result;
                     }
-                    catch (Exception ex)
+                    catch(Exception ex)
                     {
 
-                    }*/
+                    }
                 }));
             }
         }
@@ -268,21 +188,6 @@ namespace WpfApp1
         {
             root = new List<Node>();
             root.Add(new Node());
-
-        //    String test = @"START {
-        //    int a = 0;
-        //    if(a == 0)
-        //    a = 2;
-        //        for(int i = 0; i < 10; i++)
-        //        {
-        //            a = a + i;
-        //        }
-        //}";
-        //    MyParser parser = new MyParser("Cshort2.cgt");
-        //    var a = parser.Parse(test);
-        //    //DrawTree(a, depth);
-        //    ConvertToTree(a, root[0]);
-        //    OnPropertyChanged("MyItemsSource");
         }
 
         private void ConvertToTree(com.calitha.goldparser.Token token, Node currentNode1)
@@ -316,7 +221,7 @@ namespace WpfApp1
             {
                 postOrder(node[0].Children[i]);
             }
-            PolishText += node[0].Data + " ";
+            //PolishText += node[0].Data + " ";
         }
 
         private void postOrder(Node node)
@@ -326,15 +231,15 @@ namespace WpfApp1
             {
                 postOrder(node.Children[i]);
             }
-            if(node.Children.Count == 0)
-            PolishText += node.Data + " ";
+            if (node.Children.Count == 0) { }
+            //PolishText += node.Data + " ";
         }
 
         private void preOrder(Node node)
         {
             if (node == null) return;
             if (node.Children.Count == 0)
-                PolishText += node.Data + " ";
+                //PolishText += node.Data + " ";
             for (int i = 0; i < node.Children.Count; i++)
             {
                 preOrder(node.Children[i]);
