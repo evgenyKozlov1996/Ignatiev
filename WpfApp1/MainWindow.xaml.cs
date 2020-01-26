@@ -26,5 +26,15 @@ namespace WpfApp1
             InitializeComponent();
             DataContext = new MainViewModel();
         }
-    }
+
+		private void checkBox_Checked(object sender, RoutedEventArgs e)
+		{
+			MainViewModel.ShowOpTree = true;
+		}
+
+		private void checkBox_Unchecked(object sender, RoutedEventArgs e)
+		{
+			MainViewModel.ShowOpTree = false;
+		}
+	}
 }

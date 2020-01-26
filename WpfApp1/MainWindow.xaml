@@ -21,7 +21,8 @@
         <Button x:Name="BtnPolishConvert"  Command="{Binding PolishConvertCommand}" Content="Calc" Canvas.Left="265" Canvas.Top="340" Width="86" />
         <Label x:Name="label" Content="Program" Canvas.Left="93" RenderTransformOrigin="0.346,0.011"/>
         <Label x:Name="label1" Content="Lexems" Canvas.Left="369"/>
-        <Label x:Name="label2" Content="Vars output" Canvas.Left="676"/>
+        <Label x:Name="label2" Content="Vars output" Canvas.Left="697"/>
+        <CheckBox x:Name="checkBox" Content="Show operation tree" Canvas.Left="10" Canvas.Top="380" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked"/>
         <!--<TextBox x:Name="PolishTextBox"  Grid.ColumnSpan="2" Text="{Binding PolishText, Mode=TwoWay}"  VerticalScrollBarVisibility="Visible"/>-->
 
     </Canvas>

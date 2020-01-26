@@ -15,6 +15,9 @@ namespace WpfApp1
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+		public static bool ShowOpTree = false;
+
+		string grammar = "Rod.cgt";
 		private string fileName = "test.txt";
         private List<Node> root;
         private Scaner scaner;
@@ -72,8 +75,14 @@ namespace WpfApp1
                 return polishconvertCommand ??
                 (polishconvertCommand = new RelayCommand(obj =>
                 {
-                    root[0] = TreeConverter.ConvertGrammarTreeToOperationTree(root[0]);
-                    OnPropertyChanged(nameof(MyItemsSource));
+					ParseText();
+					if (ShowOpTree)
+					{
+						root[0] = TreePreparer.PrepareTree(root[0]);
+						root[0] = TreeConverter.ConvertGrammarTreeToOperationTree(root[0]);
+						OnPropertyChanged(nameof(MyItemsSource));
+					}
+					
                     /*try {
                         StartCommand.Execute(new object());
 
@@ -220,24 +229,7 @@ namespace WpfApp1
                 return startCommand ??
                   (startCommand = new RelayCommand(obj =>
                   {
-                      StartScanner.Execute(new object());
-                      if (ScannerText!=null && !ScannerText.Equals(string.Empty))
-                      {
-                          root = new List<Node>();
-                          root.Add(new Node());
-                          State = "";
-                          MyParser parser = new MyParser("Cshort8.cgt", this);
-                          var a = parser.Parse(Code);
-
-                          if (a != null)
-						  {
-							  ConvertToTree(a, root[0]);
-							  root[0] = TreePreparer.PrepareTree(root[0]);
-						  }
-                              
-
-                          OnPropertyChanged("MyItemsSource");
-                      }
+					  ParseText();
                   }));
             }
         }
@@ -265,6 +257,27 @@ namespace WpfApp1
 			//    //DrawTree(a, depth);
 			//    ConvertToTree(a, root[0]);
 			//    OnPropertyChanged("MyItemsSource");
+		}
+
+		private void ParseText()
+		{
+			StartScanner.Execute(new object());
+			if (ScannerText != null && !ScannerText.Equals(string.Empty))
+			{
+				root = new List<Node>();
+				root.Add(new Node());
+				State = "";
+				MyParser parser = new MyParser(grammar, this);
+				var a = parser.Parse(Code);
+
+				if (a != null)
+				{
+					ConvertToTree(a, root[0]);
+				}
+
+
+				OnPropertyChanged("MyItemsSource");
+			}
 		}
 
         private void ConvertToTree(com.calitha.goldparser.Token token, Node currentNode1)
