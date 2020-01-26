@@ -15,6 +15,7 @@ namespace WpfApp1
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+		private string fileName = "test.txt";
         private List<Node> root;
         private Scaner scaner;
 
@@ -246,21 +247,25 @@ namespace WpfApp1
             root = new List<Node>();
             root.Add(new Node());
 
-        //    String test = @"START {
-        //    int a = 0;
-        //    if(a == 0)
-        //    a = 2;
-        //        for(int i = 0; i < 10; i++)
-        //        {
-        //            a = a + i;
-        //        }
-        //}";
-        //    MyParser parser = new MyParser("Cshort2.cgt");
-        //    var a = parser.Parse(test);
-        //    //DrawTree(a, depth);
-        //    ConvertToTree(a, root[0]);
-        //    OnPropertyChanged("MyItemsSource");
-        }
+			using (TextReader reader = File.OpenText(fileName))
+			{
+				Code = reader.ReadToEnd();
+			}
+			//    String test = @"START {
+			//    int a = 0;
+			//    if(a == 0)
+			//    a = 2;
+			//        for(int i = 0; i < 10; i++)
+			//        {
+			//            a = a + i;
+			//        }
+			//}";
+			//    MyParser parser = new MyParser("Cshort2.cgt");
+			//    var a = parser.Parse(test);
+			//    //DrawTree(a, depth);
+			//    ConvertToTree(a, root[0]);
+			//    OnPropertyChanged("MyItemsSource");
+		}
 
         private void ConvertToTree(com.calitha.goldparser.Token token, Node currentNode1)
         {

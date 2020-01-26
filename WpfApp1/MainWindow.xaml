@@ -5,32 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="1220.458" Width="931.806">
     <Window.Resources>
         <local:TreeViewConverter x:Key="TreeViewConverter" />
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="60"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <TextBox x:Name="Code" Grid.Row="0" Grid.Column="0" Text="{Binding Code, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"/>
-        <TextBox x:Name="ScannerTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding ScannerText, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"/>
-        <Button x:Name="BtnScanner" Grid.Row="1" Grid.Column="1" Command="{Binding StartScanner}" Content="Разобрать на лексемы" />
-        <TreeView Grid.Row="0" Grid.Column="2" ItemsSource="{Binding MyItemsSource, Converter={StaticResource TreeViewConverter}}">
+    <Canvas>
+
+        <TextBox x:Name="Code"  Text="{Binding Code, Mode=TwoWay}" TextWrapping="Wrap"  AcceptsReturn="True" Height="310" Width="283" Background="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}" Canvas.Top="25"/>
+        <TextBox x:Name="ScannerTextBox" Text="{Binding ScannerText, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True" Canvas.Left="300" Canvas.Top="25" Height="310" Width="251" Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}"/>
+        <Button x:Name="BtnScanner"  Command="{Binding StartScanner}" Content="Scan" Canvas.Left="10" Canvas.Top="340" Width="98" />
+        <TreeView Canvas.Top="400" Width="800" Height="700" ItemsSource="{Binding MyItemsSource, Converter={StaticResource TreeViewConverter}}">
         </TreeView>
-        <Button x:Name="BtnStart" Grid.Row="1" Grid.Column="2" Command="{Binding StartCommand}" Content="Распарсить" />
-        <Button x:Name="BtnOpenFile" Grid.Row="1" Grid.Column="0" Command="{Binding OpenFileCommand}" Content="Открыть файл" />
-        <TextBox x:Name="StateTextBox" Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding State, Mode=TwoWay}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"/>
-        <Button x:Name="BtnPolishConvert" Grid.Row="2" Grid.Column="0" Command="{Binding PolishConvertCommand}" Content="Рассчитать" />
-        <TextBox x:Name="PolishTextBox" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding PolishText, Mode=TwoWay}"  VerticalScrollBarVisibility="Visible"/>
-        
-    </Grid>
+        <Button x:Name="BtnStart"  Command="{Binding StartCommand}" Content="Parse" Canvas.Left="141" Canvas.Top="340" Width="104" />
+        <TextBox x:Name="StateTextBox"  Text="{Binding State, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Canvas.Left="571" Canvas.Top="25" Height="310" Width="285" Background="#FFE2E8E1"/>
+        <Button x:Name="BtnPolishConvert"  Command="{Binding PolishConvertCommand}" Content="Calc" Canvas.Left="265" Canvas.Top="340" Width="86" />
+        <Label x:Name="label" Content="Program" Canvas.Left="93" RenderTransformOrigin="0.346,0.011"/>
+        <Label x:Name="label1" Content="Lexems" Canvas.Left="369"/>
+        <Label x:Name="label2" Content="Vars output" Canvas.Left="676"/>
+        <!--<TextBox x:Name="PolishTextBox"  Grid.ColumnSpan="2" Text="{Binding PolishText, Mode=TwoWay}"  VerticalScrollBarVisibility="Visible"/>-->
+
+    </Canvas>
 </Window>
