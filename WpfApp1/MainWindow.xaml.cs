@@ -36,5 +36,10 @@ namespace WpfApp1
 		{
 			MainViewModel.ShowOpTree = false;
 		}
+
+		private void BtnStart_Click(object sender, RoutedEventArgs e)
+		{
+			BtnPolishConvert.IsEnabled = true;
+		}
 	}
 }

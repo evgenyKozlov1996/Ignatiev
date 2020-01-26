@@ -16,9 +16,9 @@
         <Button x:Name="BtnScanner"  Command="{Binding StartScanner}" Content="Scan" Canvas.Left="10" Canvas.Top="340" Width="98" />
         <TreeView Canvas.Top="400" Width="800" Height="700" ItemsSource="{Binding MyItemsSource, Converter={StaticResource TreeViewConverter}}">
         </TreeView>
-        <Button x:Name="BtnStart"  Command="{Binding StartCommand}" Content="Parse" Canvas.Left="141" Canvas.Top="340" Width="104" />
+        <Button x:Name="BtnStart"  Command="{Binding StartCommand}" Content="Parse" Canvas.Left="141" Canvas.Top="340" Width="104" Click="BtnStart_Click" />
         <TextBox x:Name="StateTextBox"  Text="{Binding State, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Canvas.Left="571" Canvas.Top="25" Height="310" Width="285" Background="#FFE2E8E1"/>
-        <Button x:Name="BtnPolishConvert"  Command="{Binding PolishConvertCommand}" Content="Calc" Canvas.Left="265" Canvas.Top="340" Width="86" />
+        <Button x:Name="BtnPolishConvert"  Command="{Binding PolishConvertCommand}" Content="Calc" IsEnabled="False" Canvas.Left="265" Canvas.Top="340" Width="86" />
         <Label x:Name="label" Content="Program" Canvas.Left="93" RenderTransformOrigin="0.346,0.011"/>
         <Label x:Name="label1" Content="Lexems" Canvas.Left="369"/>
         <Label x:Name="label2" Content="Vars output" Canvas.Left="697"/>

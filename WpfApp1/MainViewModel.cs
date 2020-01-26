@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Scanner;
 using System.CodeDom.Compiler;
+using System.Text.RegularExpressions;
 
 namespace WpfApp1
 {
@@ -76,91 +77,8 @@ namespace WpfApp1
                 (polishconvertCommand = new RelayCommand(obj =>
                 {
 					ParseText();
-					if (ShowOpTree)
-					{
-						root[0] = TreePreparer.PrepareTree(root[0]);
-						root[0] = TreeConverter.ConvertGrammarTreeToOperationTree(root[0]);
-						OnPropertyChanged(nameof(MyItemsSource));
-					}
-					
-                    /*try {
-                        StartCommand.Execute(new object());
-
-                        if (root[0] != null)
-                        {
-                            var compiler = CodeDomProvider.CreateProvider("CSharp");
-                            var parameters = new CompilerParameters
-                            {
-                                CompilerOptions = "/t:library",
-                                GenerateInMemory = true,
-                                IncludeDebugInformation = false
-                            };
-                            String templatestart = @"
-                    using System;
-                        namespace Test
-                        {
-                               public class TestClass
-                               {
-                                     public string TestMethod()
-                                     {
-                                        string result = string.Empty;
-                                    ";
-                            string text = Code.Substring(Code.IndexOf('{') + 1);
-                            text = text.Remove(text.LastIndexOf('}'));
-                            int outputIndex = text.IndexOf("output") + 6;
-                            while (outputIndex != 5)
-                            {
-                                int spaceCount = 0;
-                                int currIndex = outputIndex;
-                                while (text[currIndex].Equals(' '))
-                                {
-                                    spaceCount++;
-                                    currIndex++;
-                                }
-                                text = text.Remove(outputIndex, spaceCount);
-                                int index = outputIndex;
-                                while (!text[index].Equals(';'))
-                                {
-                                    if (text[index].Equals('(') || text[index].Equals(')') || text[index].Equals(' '))
-                                    {
-                                        text = text.Remove(index, 1);
-                                    }
-                                    else if (text[index].Equals(','))
-                                    {
-                                        text = text.Remove(index, 1);
-                                        text = text.Insert(index, " + \"\\n\" + ");
-                                        index += 9;
-                                    }
-                                    else
-                                    {
-                                        index++;
-                                    }
-                                }
-                                text = text.Remove(outputIndex-6, 6);
-                                text = text.Insert(outputIndex - 6, "result += ");
-
-                                outputIndex = text.IndexOf("output") + 6;
-                            }
-
-                            String templateend = @"return result;}             
-                                }
-                         }";
-
-                            string resultcode = templatestart + text + templateend;
-                            CompilerResults results = compiler.CompileAssemblyFromSource(parameters, resultcode);
-
-                            var instance = results.CompiledAssembly.CreateInstance("Test.TestClass");
-
-                            string resultMsg = results.CompiledAssembly.GetType("Test.TestClass").GetMethod("TestMethod").Invoke(instance, new string[] { }).ToString();
-
-                            State = resultMsg;
-                        }
-                        //preOrder(root[0]);
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }*/
+					Execute();
+                    
                 }));
             }
         }
@@ -202,26 +120,6 @@ namespace WpfApp1
                 }));
             }
         }
-        public RelayCommand OpenFileCommand
-        {
-            get {
-
-                return openfileCommand ??
-                (openfileCommand = new RelayCommand(obj =>
-                {
-                    OpenFileDialog openFileDialog = new OpenFileDialog();
-                    openFileDialog.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
-                    openFileDialog.ShowDialog();
-                    if (openFileDialog.FileName.Length == 0)
-                        return;
-                    string filename = openFileDialog.FileName;
-                    using (TextReader reader = File.OpenText(filename))
-                    {
-                        Code = reader.ReadToEnd();                        
-                    }
-                }));
-            }
-        }
         public RelayCommand StartCommand
         {
             get
@@ -230,7 +128,13 @@ namespace WpfApp1
                   (startCommand = new RelayCommand(obj =>
                   {
 					  ParseText();
-                  }));
+					  if (ShowOpTree)
+					  {
+						  root[0] = TreePreparer.PrepareTree(root[0]);
+						  root[0] = TreeConverter.ConvertGrammarTreeToOperationTree(root[0]);
+						  OnPropertyChanged(nameof(MyItemsSource));
+					  }
+				  }));
             }
         }
 
@@ -264,6 +168,13 @@ namespace WpfApp1
 			StartScanner.Execute(new object());
 			if (ScannerText != null && !ScannerText.Equals(string.Empty))
 			{
+				if (ShowOpTree)
+				{
+					string pattern = @"print\(.*\);\r\n";
+					Regex regex = new Regex(pattern);
+					regex.Replace(code, string.Empty);
+				}
+
 				root = new List<Node>();
 				root.Add(new Node());
 				State = "";
@@ -337,6 +248,91 @@ namespace WpfApp1
             
                 
         }
+
+		private void Execute()
+		{
+			try
+			{
+				StartCommand.Execute(new object());
+
+				if (root[0] != null)
+				{
+					var compiler = CodeDomProvider.CreateProvider("CSharp");
+					var parameters = new CompilerParameters
+					{
+						CompilerOptions = "/t:library",
+						GenerateInMemory = true,
+						IncludeDebugInformation = false
+					};
+					String templatestart = @"
+                    using System;
+                        namespace Test
+                        {
+                               public class TestClass
+                               {
+                                     public string TestMethod()
+                                     {
+                                        string result = string.Empty;
+                                    ";
+					string text = Code;
+					string printStr = "print";
+					int someIndex = 5;
+
+					int outputIndex = text.IndexOf(printStr) + someIndex;
+					while (outputIndex != 4)
+					{
+						int spaceCount = 0;
+						int currIndex = outputIndex;
+						while (text[currIndex].Equals(' '))
+						{
+							spaceCount++;
+							currIndex++;
+						}
+						text = text.Remove(outputIndex, spaceCount);
+						int index = outputIndex;
+						while (!text[index].Equals(';'))
+						{
+							if (text[index].Equals('(') || text[index].Equals(')') || text[index].Equals(' '))
+							{
+								text = text.Remove(index, 1);
+							}
+							else if (text[index].Equals(','))
+							{
+								text = text.Remove(index, 1);
+								text = text.Insert(index, " + \"\\n\" + ");
+								index += 9;
+							}
+							else
+							{
+								index++;
+							}
+						}
+						text = text.Remove(outputIndex - someIndex, someIndex);
+						text = text.Insert(outputIndex - someIndex, "result += ");
+
+						outputIndex = text.IndexOf(printStr) + someIndex;
+					}
+
+					String templateend = @"return result;}             
+                                }
+                         }";
+
+					string resultcode = templatestart + text + templateend;
+					CompilerResults results = compiler.CompileAssemblyFromSource(parameters, resultcode);
+
+					var instance = results.CompiledAssembly.CreateInstance("Test.TestClass");
+
+					string resultMsg = results.CompiledAssembly.GetType("Test.TestClass").GetMethod("TestMethod").Invoke(instance, new string[] { }).ToString();
+
+					State = resultMsg;
+				}
+				//preOrder(root[0]);
+			}
+			catch (Exception ex)
+			{
+				
+			}
+		}
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
